@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="17701" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="voj-Xi-iVV">
+    <device id="retina6_1" orientation="portrait" appearance="light"/>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="17703"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="System colors in document resources" minToolsVersion="11.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <scenes>
+        <!--Navigation Controller-->
+        <scene sceneID="uku-e3-PoY">
+            <objects>
+                <navigationController automaticallyAdjustsScrollViewInsets="NO" id="voj-Xi-iVV" sceneMemberID="viewController">
+                    <toolbarItems/>
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="jLk-td-vgG">
+                        <rect key="frame" x="0.0" y="44" width="414" height="44"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                        <color key="tintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <color key="barTintColor" systemColor="linkColor"/>
+                        <textAttributes key="titleTextAttributes">
+                            <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        </textAttributes>
+                        <textAttributes key="largeTitleTextAttributes">
+                            <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        </textAttributes>
+                    </navigationBar>
+                    <nil name="viewControllers"/>
+                    <connections>
+                        <segue destination="s8E-lS-ml3" kind="relationship" relationship="rootViewController" id="D5o-07-BTE"/>
+                    </connections>
+                </navigationController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="wvs-VW-lOn" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="1034.7826086956522" y="118.52678571428571"/>
+        </scene>
+        <!--Todoey-->
+        <scene sceneID="Dsk-Xd-Bq5">
+            <objects>
+                <viewController id="s8E-lS-ml3" customClass="CategoryViewController" customModule="Todoey" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="yp4-2N-NVb">
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="D2c-CD-8RD">
+                                <rect key="frame" x="0.0" y="0.0" width="414" height="862"/>
+                                <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                            </tableView>
+                        </subviews>
+                        <viewLayoutGuide key="safeArea" id="jlO-Oj-Ym6"/>
+                        <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                        <constraints>
+                            <constraint firstAttribute="bottom" secondItem="D2c-CD-8RD" secondAttribute="bottom" constant="34" id="52X-rc-8is"/>
+                            <constraint firstItem="D2c-CD-8RD" firstAttribute="leading" secondItem="yp4-2N-NVb" secondAttribute="leading" id="8ES-Cq-Ush"/>
+                            <constraint firstItem="D2c-CD-8RD" firstAttribute="top" secondItem="yp4-2N-NVb" secondAttribute="top" id="QWr-Ne-PKk"/>
+                            <constraint firstAttribute="trailing" secondItem="D2c-CD-8RD" secondAttribute="trailing" id="lO6-yI-l9C"/>
+                        </constraints>
+                    </view>
+                    <navigationItem key="navigationItem" title="Todoey" id="zsY-Ng-Bk6">
+                        <barButtonItem key="rightBarButtonItem" systemItem="add" id="TrN-QB-t7e">
+                            <color key="tintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                            <connections>
+                                <action selector="addButtonPressed:" destination="s8E-lS-ml3" id="lxY-yA-Bbk"/>
+                            </connections>
+                        </barButtonItem>
+                    </navigationItem>
+                    <connections>
+                        <outlet property="tableView" destination="D2c-CD-8RD" id="ML9-VG-0i8"/>
+                        <segue destination="JYo-fk-4N8" kind="show" identifier="goToItems" id="Fvp-gk-Fi8"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="qeF-jb-Dnn" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="1797" y="127"/>
+        </scene>
+        <!--Items-->
+        <scene sceneID="bFn-xf-pXR">
+            <objects>
+                <viewController id="JYo-fk-4N8" customClass="TodoListViewController" customModule="Todoey" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="Ywe-Dq-sDU">
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="0D7-Jc-tzQ">
+                                <rect key="frame" x="0.0" y="144" width="414" height="752"/>
+                                <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                            </tableView>
+                            <searchBar contentMode="redraw" translatesAutoresizingMaskIntoConstraints="NO" id="spP-yO-Ic8">
+                                <rect key="frame" x="0.0" y="88" width="414" height="56"/>
+                                <textInputTraits key="textInputTraits"/>
+                            </searchBar>
+                        </subviews>
+                        <viewLayoutGuide key="safeArea" id="5GJ-OK-huP"/>
+                        <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                        <constraints>
+                            <constraint firstItem="0D7-Jc-tzQ" firstAttribute="top" secondItem="spP-yO-Ic8" secondAttribute="bottom" id="A27-oj-oKH"/>
+                            <constraint firstItem="spP-yO-Ic8" firstAttribute="leading" secondItem="5GJ-OK-huP" secondAttribute="leading" id="Low-vx-JyB"/>
+                            <constraint firstItem="0D7-Jc-tzQ" firstAttribute="leading" secondItem="5GJ-OK-huP" secondAttribute="leading" id="M0a-Sy-w8w"/>
+                            <constraint firstAttribute="bottom" secondItem="0D7-Jc-tzQ" secondAttribute="bottom" id="U0x-MR-bb8"/>
+                            <constraint firstItem="0D7-Jc-tzQ" firstAttribute="trailing" secondItem="5GJ-OK-huP" secondAttribute="trailing" id="jyV-PG-isP"/>
+                            <constraint firstItem="spP-yO-Ic8" firstAttribute="top" secondItem="5GJ-OK-huP" secondAttribute="top" id="qwo-29-rgP"/>
+                            <constraint firstItem="spP-yO-Ic8" firstAttribute="trailing" secondItem="5GJ-OK-huP" secondAttribute="trailing" id="wIa-uf-TQs"/>
+                        </constraints>
+                    </view>
+                    <navigationItem key="navigationItem" title="Items" id="fRU-hj-8Z7">
+                        <barButtonItem key="rightBarButtonItem" systemItem="add" id="vh9-2G-CUl">
+                            <color key="tintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                            <connections>
+                                <action selector="addNewItems:" destination="JYo-fk-4N8" id="fVw-Sb-2k8"/>
+                            </connections>
+                        </barButtonItem>
+                    </navigationItem>
+                    <connections>
+                        <outlet property="searchBar" destination="spP-yO-Ic8" id="qdn-K0-Xzl"/>
+                        <outlet property="tableView" destination="0D7-Jc-tzQ" id="iOZ-QO-Z2A"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="pkt-TT-hSL" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="2659" y="134"/>
+        </scene>
+    </scenes>
+    <resources>
+        <systemColor name="linkColor">
+            <color red="0.0" green="0.47843137254901963" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+        </systemColor>
+        <systemColor name="systemBackgroundColor">
+            <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+        </systemColor>
+    </resources>
+</document>
