@@ -8,13 +8,15 @@
 
 import UIKit
 import CoreData
+import ChameleonFramework
 
-class TodoListViewController: UIViewController {
-
+class TodoListViewController: SwipeViewController, UITableViewDelegate, UITableViewDataSource {
+    
     @IBOutlet weak var tableView: UITableView!
     @IBOutlet weak var searchBar: UISearchBar!
     
     var itemArray = [Item]()
+    
     var selectedCategory: CategoryModel?{
         didSet{
             loadItems()
@@ -23,18 +25,51 @@ class TodoListViewController: UIViewController {
     
     let context = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
     
-    
     override func viewDidLoad() {
+        super.parentTableView = tableView
         super.viewDidLoad()
+        
+       
         tableView.dataSource = self
         searchBar.delegate = self
         tableView.delegate = self
-
+        
         tableView.register(UINib(nibName: "TodoeyCell", bundle: nil), forCellReuseIdentifier: "TodoeyCell")
     }
     
-//MARK: - Add New Items
-
+    //MARK: - TableView data source
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return itemArray.count
+    }
+    
+    override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let item = itemArray[indexPath.row]
+        
+        let cell = super.tableView(tableView, cellForRowAt: indexPath) as! TodoeyCell
+        
+        cell.taskNameLabel.text = item.title
+        if let categoryBackground = selectedCategory?.color {
+            cell.backgroundColor = UIColor(hexString: categoryBackground)?.darken(byPercentage: CGFloat(indexPath.row) / CGFloat(10.0))
+            cell.taskNameLabel?.textColor = ContrastColorOf(cell.backgroundColor!, returnFlat: true)
+        }
+        cell.accessoryType = item.done ? .checkmark : .none
+        
+        return cell
+    }
+    
+    //MARK: - TableView delegate
+    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        itemArray[indexPath.row].done = !itemArray[indexPath.row].done
+        
+        tableView.cellForRow(at: indexPath)?.accessoryType = itemArray[indexPath.row].done ? .checkmark : .none
+        
+        self.saveItems()
+        
+        tableView.deselectRow(at: indexPath, animated: true)
+        
+    }
+    
+    //MARK: - Add New Items
     @IBAction func addNewItems(_ sender: UIBarButtonItem) {
         var textField = UITextField()
         
@@ -84,36 +119,16 @@ class TodoListViewController: UIViewController {
         }
         tableView?.reloadData()
     }
-}
-
-//MARK: - TableView delegate
-
-extension TodoListViewController: UITableViewDataSource, UITableViewDelegate {
-    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return itemArray.count
-    }
     
-    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let item = itemArray[indexPath.row]
+    //MARK: - Delete data from swipe
+    override func cellDeleted(at indexPath: IndexPath) {
         
-        let cell = tableView.dequeueReusableCell(withIdentifier: "TodoeyCell", for: indexPath) as! TodoeyCell
-        
-        cell.taskNameLabel.text = item.title
-        
-        cell.accessoryType = item.done ? .checkmark : .none
-        
-        return cell
-    }
-    
-    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        itemArray[indexPath.row].done = !itemArray[indexPath.row].done
-              
-        tableView.cellForRow(at: indexPath)?.accessoryType = itemArray[indexPath.row].done ? .checkmark : .none
-        
+        let itemToDelete = self.itemArray[indexPath.row]
+        self.context.delete(itemToDelete)
         self.saveItems()
+        tableView.reloadData()
         
-        tableView.deselectRow(at: indexPath, animated: true)
-        
+        self.itemArray.remove(at: indexPath.row)
     }
 }
 
@@ -125,7 +140,7 @@ extension TodoListViewController: UISearchBarDelegate {
         let categoryPredicate = NSPredicate(format: "parentCategory.name MATCHES %@", selectedCategory!.name!)
         
         request.predicate = NSCompoundPredicate(andPredicateWithSubpredicates: [searchPredicate, categoryPredicate])
-
+        
         request.sortDescriptors = [NSSortDescriptor(key: "title", ascending: true)]
         
         loadItems(with: request)

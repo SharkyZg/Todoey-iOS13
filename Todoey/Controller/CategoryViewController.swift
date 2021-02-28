@@ -8,6 +8,7 @@
 
 import UIKit
 import CoreData
+import ChameleonFramework
 
 class CategoryViewController: SwipeViewController, UITableViewDelegate, UITableViewDataSource {
     
@@ -20,11 +21,8 @@ class CategoryViewController: SwipeViewController, UITableViewDelegate, UITableV
         super.parentTableView = tableView
         super.viewDidLoad()
         
-        
         tableView.delegate = self
-        
         tableView.dataSource = self
-        
         
         loadCategories()
     }
@@ -38,7 +36,15 @@ class CategoryViewController: SwipeViewController, UITableViewDelegate, UITableV
         let cell = super.tableView(tableView, cellForRowAt: indexPath) as! TodoeyCell
         
         let category = categoryArray[indexPath.row]
+        if category.color == nil {
+            category.color = UIColor.randomFlat().hexValue()
+        }
+
+        cell.backgroundColor = UIColor(hexString: category.color!)
+        cell.taskNameLabel?.textColor = ContrastColorOf(cell.backgroundColor!, returnFlat: true)
         cell.taskNameLabel?.text = category.name
+        
+        saveCategories()
         
         return cell
     }
@@ -65,6 +71,7 @@ class CategoryViewController: SwipeViewController, UITableViewDelegate, UITableV
             self.categoryArray.append(newCategory)
             
             self.saveCategories()
+            self.tableView.reloadData()
         }
         alert.addTextField { (alertTextField) in
             alertTextField.placeholder = "Create new item"
@@ -91,7 +98,7 @@ class CategoryViewController: SwipeViewController, UITableViewDelegate, UITableV
         } catch {
             print("Error saving context \(error)")
         }
-        self.tableView.reloadData()
+
     }
     
     func loadCategories(with request: NSFetchRequest<CategoryModel> = CategoryModel.fetchRequest()) {
