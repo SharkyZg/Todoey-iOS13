@@ -8,9 +8,8 @@
 
 import UIKit
 import CoreData
-import SwipeCellKit
 
-class CategoryViewController: UIViewController {
+class CategoryViewController: SwipeViewController, UITableViewDelegate, UITableViewDataSource {
     
     @IBOutlet weak var tableView: UITableView!
     
@@ -18,17 +17,40 @@ class CategoryViewController: UIViewController {
     let context = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
     
     override func viewDidLoad() {
+        super.parentTableView = tableView
         super.viewDidLoad()
         
-        tableView.dataSource = self
+        
         tableView.delegate = self
         
-        tableView.register(UINib(nibName: "ToDoItemCell", bundle: nil), forCellReuseIdentifier: "ToDoItemCell")
+        tableView.dataSource = self
+        
         
         loadCategories()
-        
     }
     
+    //MARK: - TableView datasource
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return categoryArray.count
+    }
+    
+    override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let cell = super.tableView(tableView, cellForRowAt: indexPath) as! TodoeyCell
+        
+        let category = categoryArray[indexPath.row]
+        cell.taskNameLabel?.text = category.name
+        
+        return cell
+    }
+    
+    //MARK: - TableView delegate
+    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        self.performSegue(withIdentifier: "goToItems", sender: self)
+        tableView.deselectRow(at: indexPath, animated: true)
+    }
+       
+
+    //MARK: - UI response
     @IBAction func addButtonPressed(_ sender: UIBarButtonItem) {
         var textField = UITextField()
         
@@ -53,6 +75,16 @@ class CategoryViewController: UIViewController {
         
         present(alert, animated: true, completion: nil)
     }
+    
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        let destinationVC = segue.destination as! TodoListViewController
+        
+        if let indexPath = tableView.indexPathForSelectedRow {
+            destinationVC.selectedCategory = categoryArray[indexPath.row]
+        }
+    }
+    
+    //MARK: - Core data
     func saveCategories() {
         do {
             try context.save()
@@ -70,63 +102,15 @@ class CategoryViewController: UIViewController {
         }
         tableView.reloadData()
     }
-    
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        let destinationVC = segue.destination as! TodoListViewController
+
+    //MARK: - Delete data from swipe
+    override func cellDeleted(at indexPath: IndexPath) {
         
-        if let indexPath = tableView.indexPathForSelectedRow {
-            destinationVC.selectedCategory = categoryArray[indexPath.row]
-        }
-    }
-}
-//
-
-extension CategoryViewController: UITableViewDataSource, UITableViewDelegate, SwipeTableViewCellDelegate {
-    
-    //MARK: - TableView datasource
-    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return categoryArray.count
-    }
-    
-    
-    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let category = categoryArray[indexPath.row]
+        let categoryToDelete = self.categoryArray[indexPath.row]
+        self.context.delete(categoryToDelete)
+        self.saveCategories()
+        tableView.reloadData()
         
-        let cell = tableView.dequeueReusableCell(withIdentifier: "ToDoItemCell", for: indexPath) as! ToDoItemCell
-        cell.delegate = self
-        cell.taskNameLabel.text = category.name
-        
-        return cell
-    }
-
-//MARK: - TableView delegate
-    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        self.performSegue(withIdentifier: "goToItems", sender: self)
-        tableView.deselectRow(at: indexPath, animated: true)
-    }
-//MARK: - Swipe table view cell delegate methods
-    func tableView(_ tableView: UITableView, editActionsForRowAt indexPath: IndexPath, for orientation: SwipeActionsOrientation) -> [SwipeAction]? {
-        guard orientation == .right else { return nil }
-
-        let deleteAction = SwipeAction(style: .destructive, title: "Delete") { action, indexPath in
-            let categoryToDelete = self.categoryArray[indexPath.row]
-            self.context.delete(categoryToDelete)
-            self.saveCategories()
-            tableView.reloadData()
-            
-            self.categoryArray.remove(at: indexPath.row)
-            
-        }
-
-        // customize the action appearance
-        deleteAction.image = UIImage(named: "delete-icon")
-            
-        return [deleteAction]
-    }
-    
-    func tableView(_ tableView: UITableView, editActionsOptionsForRowAt indexPath: IndexPath, for orientation: SwipeActionsOrientation) -> SwipeOptions {
-        var options = SwipeOptions()
-        options.expansionStyle = .destructive
-        return options
+        self.categoryArray.remove(at: indexPath.row)
     }
 }

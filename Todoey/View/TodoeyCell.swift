@@ -9,7 +9,7 @@
 import UIKit
 import SwipeCellKit
 
-class ToDoItemCell: SwipeTableViewCell {
+class TodoeyCell: SwipeTableViewCell {
 
     @IBOutlet weak var taskNameLabel: UILabel!
     

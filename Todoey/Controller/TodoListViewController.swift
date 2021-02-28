@@ -30,7 +30,7 @@ class TodoListViewController: UIViewController {
         searchBar.delegate = self
         tableView.delegate = self
 
-        tableView.register(UINib(nibName: "ToDoItemCell", bundle: nil), forCellReuseIdentifier: "ToDoItemCell")
+        tableView.register(UINib(nibName: "TodoeyCell", bundle: nil), forCellReuseIdentifier: "TodoeyCell")
     }
     
 //MARK: - Add New Items
@@ -96,7 +96,7 @@ extension TodoListViewController: UITableViewDataSource, UITableViewDelegate {
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let item = itemArray[indexPath.row]
         
-        let cell = tableView.dequeueReusableCell(withIdentifier: "ToDoItemCell", for: indexPath) as! ToDoItemCell
+        let cell = tableView.dequeueReusableCell(withIdentifier: "TodoeyCell", for: indexPath) as! TodoeyCell
         
         cell.taskNameLabel.text = item.title
         
