@@ -29,12 +29,29 @@ class TodoListViewController: SwipeViewController, UITableViewDelegate, UITableV
         super.parentTableView = tableView
         super.viewDidLoad()
         
-       
+        
+        
         tableView.dataSource = self
         searchBar.delegate = self
         tableView.delegate = self
         
         tableView.register(UINib(nibName: "TodoeyCell", bundle: nil), forCellReuseIdentifier: "TodoeyCell")
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        if let categoryBackground = selectedCategory?.color {
+            guard let navBar = navigationController?.navigationBar else {fatalError("Navigation controller does not exist.")}
+            
+            title = selectedCategory?.name
+                                    
+            if let navBarColor = UIColor(hexString: categoryBackground) {
+                navBar.backgroundColor = navBarColor
+                navBar.tintColor = ContrastColorOf(navBarColor, returnFlat: true)
+                searchBar.barTintColor = navBarColor
+                navBar.largeTitleTextAttributes = [NSAttributedString.Key.foregroundColor: ContrastColorOf(navBarColor, returnFlat: true)]
+            }
+            
+        }
     }
     
     //MARK: - TableView data source

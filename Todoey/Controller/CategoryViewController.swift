@@ -27,6 +27,13 @@ class CategoryViewController: SwipeViewController, UITableViewDelegate, UITableV
         loadCategories()
     }
     
+    override func viewWillAppear(_ animated: Bool) {
+        guard let navBar = navigationController?.navigationBar else {fatalError("Navigation controller does not exist.")}
+        
+        navBar.backgroundColor = UIColor.flatSkyBlue()
+        navBar.largeTitleTextAttributes = [NSAttributedString.Key.foregroundColor: UIColor.white]
+    }
+    
     //MARK: - TableView datasource
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return categoryArray.count
