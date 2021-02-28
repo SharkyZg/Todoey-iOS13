@@ -7,8 +7,9 @@
 //
 
 import UIKit
+import SwipeCellKit
 
-class ToDoItemCell: UITableViewCell {
+class ToDoItemCell: SwipeTableViewCell {
 
     @IBOutlet weak var taskNameLabel: UILabel!
     
